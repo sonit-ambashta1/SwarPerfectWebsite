@@ -1,35 +1,34 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SearchBar from "../components/SearchBar"
 import VideoCard from "../components/VideoCard";
 
 const Dashboard = () => {
     // initially hardcoded data
-    const videos = [
-        {
-            id: 1,
-            url: "https://placehold.co/300x200",
-            title: "Tum Hi Ho Karaoke",
-            language: "Hindi",
-            description: "A karaoke version of Tum Hi Ho.",
-            date_published: "2026-08-01"
-        },
-        {
-            id: 2,
-            url: "https://placehold.co/300x200",
-            title: "Perfect Karaoke",
-            language: "English",
-            description: "A karaoke version of Perfect.",
-            date_published: "2026-08-03"
-        },
-        {
-            id: 3,
-            url: "https://placehold.co/300x200",
-            title: "Channa Mereya Karaoke",
-            language: "Hindi",
-            description: "Karaoke track with lyrics.",
-            date_published: "2026-08-05"
-        }
-    ];
+    const [videos, setVideos] = useState([]);
+
+    async function fetchVideos(){
+        let video_list = await fetch("/videos.json").then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+
+        const normalizedVideos = video_list.map((video) => ({
+            id: video.video_id ?? video.id,
+            url: video.thumbnail_url ?? video.url,
+            title: video.title,
+            description: video.description,
+            date_published: video.publish_date ?? video.date_published,
+        }))
+
+        console.log(normalizedVideos);
+        setVideos(normalizedVideos);
+    }
+    
+    useEffect(() => {
+        fetchVideos();
+    }, []);
 
     return (
         <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -41,10 +40,10 @@ const Dashboard = () => {
                             Discover karaoke tracks by language, artist, and release date.
                         </h1>
                         <p className="max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
-                            Browse latest video stories, filter by language, and preview content with a polished dashboard feel.
+                            Searchbar coming soon.
                         </p>
                     </div>
-                    <SearchBar />
+                    {/* Disabled SearchBar for now, as the search functionality is not yet implemented. */}
                 </header>
 
                 <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -53,9 +52,9 @@ const Dashboard = () => {
                             key={video.id}
                             url={video.url}
                             title={video.title}
-                            language={video.language}
                             description={video.description}
                             date_published={video.date_published}
+                            id={video.id}
                         />
                     ))}
                 </section>
