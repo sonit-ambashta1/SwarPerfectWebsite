@@ -3,62 +3,138 @@ import os
 import boto3
 from googleapiclient.discovery import build
 
-load_dotenv()
+s3 = boto3.client("s3")
 
-# 1. retrieves channel details for the SWAR PERFECT channel ID and loads them into a file
-API_KEY = os.getenv("YOUTUBE_API_KEY")
 
-youtube = build(
-    "youtube",
-    "v3",
-    developerKey=API_KEY
-)
+def get_channel_details(youtube, channel_id):
+    try:
+        channel = youtube.channels().list(
+            part="contentDetails",
+            id=channel_id,
+        )
+        return channel.execute()
+    except Exception as e:
+        print(f"Error fetching channel details: {e}")
+        return {}
 
-channel = youtube.channels().list(
-    part="contentDetails",
-    id=os.getenv("YOUTUBE_CHANNEL_ID")
-)
 
-try:
-    result = channel.execute()
-except Exception as e:
-    print(type(e))
-    print(f"Error fetching channel details: {e}")
-    result = {}
+def get_playlist_videos(youtube, playlist_id):
+    try:
+        videos = youtube.playlistItems().list(
+            part="snippet",
+            playlistId=playlist_id,
+            maxResults=50,
+        )
+        return videos.execute()
+    except Exception as e:
+        print(f"Error fetching videos: {e}")
+        return {"items": []}
 
-with open("channel_details.json", "w") as f:
-    json.dump(result, f, indent=4)
-    
-# 2. retrieve the list of videos for the channel and load them into a file (use YouTube's UPLOADED playlist ID)
-playlist_id = result.get("items", [])[0].get("contentDetails", {}).get("relatedPlaylists", {}).get("uploads")
 
-videos = youtube.playlistItems().list(
-    part="snippet",
-    playlistId=playlist_id,
-    maxResults=50
-)
+def transform_videos(video_result):
+    videos = []
 
-try:
-    video_result = videos.execute()
-except Exception as e:
-    print(type(e))
-    print(f"Error fetching videos: {e}")
-with open("videos_raw.json", "w") as f:
-    json.dump(video_result, f, indent=4)
-    
-# 3. for each video, retrieve VideoID, title, description, thumbnail URL, and publish date, and load them into a file
-videos = []
-for item in video_result.get("items", []):
-    video = {
-        "video_id": item["snippet"]["resourceId"]["videoId"],
-        "title": item["snippet"]["title"],
-        "description": item["snippet"]["description"],
-        "thumbnail_url": item["snippet"]["thumbnails"]["high"]["url"],
-        "publish_date": item["snippet"]["publishedAt"]
+    for item in video_result.get("items", []):
+        snippet = item.get("snippet", {})
+
+        videos.append(
+            {
+                "video_id": snippet.get("resourceId", {}).get("videoId"),
+                "title": snippet.get("title"),
+                "description": snippet.get("description"),
+                "thumbnail_url": (
+                    snippet.get("thumbnails", {})
+                    .get("high", {})
+                    .get("url")
+                ),
+                "publish_date": snippet.get("publishedAt"),
+            }
+        )
+
+    return videos
+
+
+def upload_to_s3(videos):
+    json_data = json.dumps(videos, indent=4)
+
+    bucket_name = os.getenv("S3_BUCKET_NAME")
+
+    s3.put_object(
+        Bucket=bucket_name,
+        Key="videos.json",
+        Body=json_data,
+        ContentType="application/json",
+    )
+
+
+def lambda_handler(event, context):
+    print("Starting Swar Perfect YouTube ingestion")
+
+    api_key = os.getenv("YOUTUBE_API_KEY")
+    channel_id = os.getenv("YOUTUBE_CHANNEL_ID")
+
+    print("Connecting to YouTube API")
+
+    youtube = build(
+        "youtube",
+        "v3",
+        developerKey=api_key,
+    )
+
+    print("Connected to YouTube API, fetching channel details")
+
+    channel_result = get_channel_details(
+        youtube,
+        channel_id,
+    )
+
+    items = channel_result.get("items", [])
+
+    if not items:
+        raise RuntimeError(
+            "No channel information returned."
+        )
+
+    playlist_id = (
+        items[0]
+        .get("contentDetails", {})
+        .get("relatedPlaylists", {})
+        .get("uploads")
+    )
+
+    if not playlist_id:
+        raise RuntimeError(
+            "Uploads playlist ID not found."
+        )
+
+    print(f"Found uploads playlist: {playlist_id}")
+
+    print("Retrieving uploaded videos")
+
+    video_result = get_playlist_videos(
+        youtube,
+        playlist_id,
+    )
+
+    print(
+        f"Retrieved {len(video_result.get('items', []))} videos"
+    )
+
+    print("Transforming video metadata")
+
+    videos = transform_videos(video_result)
+
+    print("Uploading videos.json to S3")
+
+    upload_to_s3(videos)
+
+    print(
+        f"Uploaded {len(videos)} videos to S3"
+    )
+
+    return {
+        "statusCode": 200,
+        "videos_processed": len(videos),
+        "bucket": os.getenv("S3_BUCKET_NAME"),
+        "object": "videos.json",
     }
-    videos.append(video)
-
-# store the JSON file in the public folder of the website to access from the frontend 
-FRONTEND_PUBLIC_FOLDER = os.path.join(os.path.dirname(__file__), "..", "swar-perfect-website", "public")
-with open(os.path.join(FRONTEND_PUBLIC_FOLDER, "videos.json"), "w") as f:
-    json.dump(videos, f, indent=4)
