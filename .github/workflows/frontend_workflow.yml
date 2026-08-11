@@ -1,4 +1,9 @@
 name: Build Frontend
+env:
+    VITE_CLOUDFRONT_DISTRIBUTION_LINK: ${{ vars.VITE_CLOUDFRONT_DISTRIBUTION_LINK }}
+    run: |
+      cd swar-perfect-website
+      npm run build
 
 on:
   workflow_dispatch:
