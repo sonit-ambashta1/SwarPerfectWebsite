@@ -228,3 +228,4 @@ node_modules/
 
 **/lambda_build/**
 swar_script_env
+swar-lambda.zip
