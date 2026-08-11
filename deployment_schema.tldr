@@ -254,9 +254,9 @@
 			"typeName": "binding"
 		},
 		{
-			"x": 66.55770824435713,
-			"y": 503.64455187214594,
-			"z": 0.7099055483774435,
+			"x": 63.233727323332225,
+			"y": 174.28796741512835,
+			"z": 0.7783441559863188,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
@@ -421,12 +421,75 @@
 			"typeName": "binding"
 		},
 		{
-			"editingShapeId": "shape:nZy_LRtkaoiSqLLvLgH21",
+			"x": 236.23414349008516,
+			"y": 301.1377982650049,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:bHa21PNHnvzk10i_1-4fO",
+			"type": "geo",
+			"props": {
+				"w": 295,
+				"h": 122.06381751507493,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"flipX": false,
+				"flipY": false,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "CDN and Secure Site:"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "CloudFront"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "aCobU",
+			"typeName": "shape"
+		},
+		{
+			"editingShapeId": null,
 			"croppingShapeId": null,
 			"selectedShapeIds": [
-				"shape:nZy_LRtkaoiSqLLvLgH21"
+				"shape:bHa21PNHnvzk10i_1-4fO"
 			],
-			"hoveredShapeId": "shape:nZy_LRtkaoiSqLLvLgH21",
+			"hoveredShapeId": null,
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
 			"focusedGroupId": null,
@@ -866,14 +929,11 @@
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {
-				"tldraw:geo": "rectangle",
-				"tldraw:arrowheadStart": "none"
-			},
+			"stylesForNextShape": {},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "default",
+				"type": "ns-resize",
 				"rotation": 0
 			},
 			"isFocusMode": false,

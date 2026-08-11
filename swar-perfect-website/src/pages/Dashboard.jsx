@@ -7,7 +7,9 @@ const Dashboard = () => {
     const [videos, setVideos] = useState([]);
 
     async function fetchVideos(){
-        let video_list = await fetch("/videos.json").then((response) => {
+        const link = import.meta.env.VITE_CLOUDFRONT_DISTRIBUTION_LINK || "/videos.json";
+
+        let video_list = await fetch(link).then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
