@@ -1,0 +1,29 @@
+name: Build Lambda Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: |
+          mkdir lambda_build
+          pip install google-api-python-client -t lambda_build
+          cp python_scripts/fetch_and_store_videos.py lambda_build/lambda_function.py
+
+      - run: |
+          cd lambda_build
+          zip -r ../deployment.zip .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deployment-zip
+          path: deployment.zip
