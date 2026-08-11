@@ -1,7 +1,7 @@
 import json
 import os
+import boto3
 from googleapiclient.discovery import build
-from dotenv import load_dotenv
 
 load_dotenv()
 

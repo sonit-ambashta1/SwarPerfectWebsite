@@ -225,3 +225,6 @@ dist-ssr/
 *.local
 node_modules/
 .vite/
+
+**/lambda_build/**
+swar_script_env
