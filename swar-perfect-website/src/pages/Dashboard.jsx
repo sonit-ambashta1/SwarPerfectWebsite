@@ -38,7 +38,7 @@ const Dashboard = () => {
             <div className="mx-auto flex min-h-screen max-w-7xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
                 <header className="space-y-4">
                     <div className="max-w-3xl space-y-3">
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300/80">Swar Perfect Explorer</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300/80">Swar Perfect</p>
                         <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
                             Discover karaoke tracks by language, artist, and release date.
                         </h1>
