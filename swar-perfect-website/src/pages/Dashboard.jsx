@@ -7,7 +7,7 @@ const Dashboard = () => {
     const [videos, setVideos] = useState([]);
 
     async function fetchVideos(){
-        const link = import.meta.env.VITE_CLOUDFRONT_DISTRIBUTION_LINK || "/swarperfect_karaoke_videos.json";
+        const link = import.meta.env.VITE_CLOUDFRONT_DISTRIBUTION_LINK || "/filtered_videos.json";
 
         let video_list = await fetch(link).then((response) => {
             if (!response.ok) {
@@ -48,9 +48,16 @@ const Dashboard = () => {
                     </div>
                     {/* Disabled SearchBar for now, as the search functionality is not yet implemented. */}
                 </header>
-                <p className="text-red-500">
-                    Video count: {videos.length}
-                </p>
+                <div className="inline-flex items-center rounded-xl border border-violet-500/30 bg-slate-900/60 px-4 py-3">
+                    <div>
+                        <p className="text-xs uppercase tracking-wider text-slate-400">
+                            Library Size
+                        </p>
+                        <p className="text-2xl font-bold text-violet-300">
+                            {videos.length}
+                        </p>
+                    </div>
+                </div>
                 <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                     {videos.map((video) => (
                         <VideoCard
