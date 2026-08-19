@@ -36,6 +36,12 @@ const Dashboard = () => {
     return (
         <main className="min-h-screen bg-slate-950 text-slate-100">
             <div className="mx-auto flex min-h-screen max-w-7xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
+                <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/5 px-4 py-2">
+                    <span className="h-2 w-2 rounded-full bg-violet-400"></span>
+                    <span className="text-sm text-slate-300">
+                        {videos.length} tracks available
+                    </span>
+                </div>
                 <header className="space-y-4">
                     <div className="max-w-3xl space-y-3">
                         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300/80">Swar Perfect</p>
@@ -48,16 +54,6 @@ const Dashboard = () => {
                     </div>
                     {/* Disabled SearchBar for now, as the search functionality is not yet implemented. */}
                 </header>
-                <div className="inline-flex items-center rounded-xl border border-violet-500/30 bg-slate-900/60 px-4 py-3">
-                    <div>
-                        <p className="text-xs uppercase tracking-wider text-slate-400">
-                            Library Size
-                        </p>
-                        <p className="text-2xl font-bold text-violet-300">
-                            {videos.length}
-                        </p>
-                    </div>
-                </div>
                 <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                     {videos.map((video) => (
                         <VideoCard
