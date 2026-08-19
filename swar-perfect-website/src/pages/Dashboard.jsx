@@ -46,7 +46,7 @@ const Dashboard = () => {
                     <div className="max-w-3xl space-y-3">
                         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300/80">Swar Perfect</p>
                         <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                            Discover karaoke tracks by language, artist, and release date.
+                            With timed singing practice, you can improve your singing skills and become a better singer. Look here for a collection of tracks that we have uploaded.
                         </h1>
                         <p className="max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
                             Searchbar coming soon.
